@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   get 'about' => 'home#about'
   post 'generate_pdf' => 'home#generate_pdf'
-  post 'recieve_pdf/:id' => 'home#recieve_pdf'
+  post 'receive_pdf/:id' => 'home#receive_pdf'
   get 'check/:id' => 'home#check'
 
   # Example of regular route:

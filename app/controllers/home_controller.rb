@@ -3,7 +3,7 @@ require 'fileutils'
 
 class HomeController < ApplicationController
 
-	protect_from_forgery except: :recieve_pdf
+	protect_from_forgery except: :receive_pdf
 
   # GET /home
   def index
@@ -19,7 +19,7 @@ class HomeController < ApplicationController
 		Hpa.api_token = ENV['API_TOKEN']
 		
 		id = SecureRandom.uuid
-		callback_url = "#{request.base_url}/recieve_pdf/#{id}"
+		callback_url = "#{request.base_url}/receive_pdf/#{id}"
 		response = Hpa::Pdf.create(
       :url => "#{request.base_url}/example.html",
 			:callback => callback_url,
@@ -37,7 +37,7 @@ class HomeController < ApplicationController
 		end
   end
 
-  def recieve_pdf
+  def receive_pdf
 
   	pdf_name = params[:id] + ".pdf"
 
