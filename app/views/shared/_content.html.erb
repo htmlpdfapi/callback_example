@@ -1,0 +1,40 @@
+<h2>What is the purpose of callback URL?</h2>
+<p>In a typical scenario you make HTTP POST request with the parameters that you send to HTML PDF API service and immediately get response with PDF in the body of the response. Then you can save the response to the file or show it directly in the user's browser. In this case, we blocked an application and the user must wait for the process to finish.</p>
+<p>With callback URL you also send HTTP POST request but you don't receive PDF file immediately. We use Callback URL to recieve POST request with PDF file from HTML PDF API service. When PDF file is created you can redirect the user to PDF file, show message or implement other logic. In this case, you didn't block an application and the user can continue working.</p>
+
+<h2>When to use callback URL?</h2>
+<p>You should use callback URL in many different scenarios and it's very useful if you:</p>
+<ol>
+  <li>don't want to block the server and the user interface</li>
+  <li>want to avoid timeout on server when you generate large PDF that create long-running task</li>
+</ol>
+<p>Our servers will create the new process and it will start efficient background processing so you don't need to worry about that.</p>
+<p>Because callback URL must be availiable online, we'll use Heroku to deploy an application. We have already prepared an application for you, but if you are not familiar with Heroku or you need more information visit <a href="https://devcenter.heroku.com/articles/getting-started-with-ruby#introduction">Getting Started with Ruby on Heroku.</a></p>
+
+<h2>How it works</h2>
+<p>In this section we'll go through the main parts of the application.</p>
+<p>We have generated HTML file with 20 top rated movies from <a href="https://www.themoviedb.org/?language=en">The Movie Database (TMDb)</a>. You can find it in public directory of the application. The name of file is example.html. We'll use this file to send it to HTML PDF API service.</p>
+<p>We have three layers of the application. The client side (Browser), the server side - in our case RoR application (Your app) and HTML PDF API service. Let's look following diagram and how we send data between above layers:</p>
+<p class="text-center"><img src="https://htmlpdfapi.com/uploads/images/564f4137726169116d310000/content_multipage-heroku-diagram.png?1448034614" alt=""></p>
+<p>We have a three separeted steps marked by numbers on the left side:</p>
+
+<h3>First step</h3>
+<ul>
+  <li>Browser sends POST request to Your app.</li>
+  <li>Your app sends POST request to HTML PDF API service with callback parameter.</li>
+  <li>HTML PDF API service immediately returns response '<strong>Processing</strong>' with status 200 to Your app. It depends on how much data you send, generation of PDF can take some time. On this way we don't block Your app.</li>
+  <li>Your app sends a reponse to the Browser with status '<strong>Processing</strong>' and cookie named file_id with id of file as a value. Your app we'll use this file_id to save file to the disk and to check if file is created.</li>
+</ul>
+<h3>Second step</h3>
+<ul>
+  <li>Browser sends GET request with <strong>id</strong> of file from the cookie to Your app.</li>
+  <li>Your app check if file with sent <strong>id</strong> exists. If file doesn't exist Your app sends the Browser response with status '<strong>Processing</strong>'.</li>
+  <li>Since Browser expects status '<strong>Done</strong>', which means that file is created on server, it continues to call Your app.</li>
+</ul>
+<h3>Third step</h3>
+<ul>
+  <li>After coverting your large amount of data, HTML PDF API sends PDF to callback URL with POST method to Your app.</li>
+  <li>Your app saves the PDF file on disk. The name of file is the same that we sent to the Browser in cookie.</li>
+  <li>All this time the second step is runnning beetwen Browser and Your app, but this time file exists and Your app will respond with status '<strong>Done</strong>'.</li>
+  <li>Finally, because status is '<strong>Done</strong>', Browser shows the user message with link to the PDF file.</li>
+</ul>

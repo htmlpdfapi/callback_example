@@ -1,0 +1,16 @@
+<div class="container text-center">
+  <div class="alert alert-info" role="alert">
+  	Below this text you should see link for PDF file if you've clicked Generate PDF on <%= link_to 'Home', root_path, class: 'label label-primary' %> page.
+  </div>
+  <div class="row generate-about">
+    <div class="text-center">
+    	<a class="btn btn-big btn-danger ajax" href="#"><i></i><span>PDF is generating</span></a>
+    </div>
+  </div>
+  <hr>
+  <p id="notice" class="alert alert-success" role="alert"><%= notice %></p>
+</div>
+
+<div class="container">
+  <%= render 'shared/content' %>
+</div>

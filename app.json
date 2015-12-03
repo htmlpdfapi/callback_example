@@ -1,0 +1,8 @@
+{
+  "name": "Generate multipage PDF",
+  "description": "Generate multipage PDF from RoR",
+  "repository": "https://github.com/htmlpdfapi/callback_example",
+  "env": {
+    "API_TOKEN": ""
+  }
+}
